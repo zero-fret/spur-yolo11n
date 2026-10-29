@@ -1,6 +1,6 @@
 # SPUR-yolo11n
 
-A from-scratch PyTorch re-implementation of **SPUR** (ICML 2026) on top of the
+A from-scratch PyTorch re-implementation of **SPUR** (Scale-Partitioned Uncertainty Rectification for Robust UAV-on-UAV Interception, ICML 2026) on top of the
 **YOLO11n-det** anchor-free backbone.
 
 The original SPUR uses YOLOv4-tiny (CSPDarknet53-tiny, anchor-based, two
