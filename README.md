@@ -103,6 +103,43 @@ python -m spur.detect --config configs/spur_uav.yaml `
     --img-size 640 --conf 0.25 --save-dir out/
 ```
 
+## Evaluation
+
+```powershell
+python -m spur.eval_map --data path/to/yolo_dataset --nc 1 `
+    --weights weights/spur_last.pt --img-size 640
+```
+
+This computes mAP@0.5 (VOC 11-point), mAP@[0.5:0.95] (10 IoU thresholds),
+Precision / Recall at conf=0.25, and scale-wise AP@0.5 on COCO area buckets
+(small < 32², medium 32²–96², large ≥ 96²).
+
+### Reported numbers (UAV-MultiView, val split)
+
+Trained on an RTX 4050 Laptop (6.4 GB), 120 epochs, batch=8, img=640,
+Adam + cosine, AMP. Only horizontal flip and HSV augmentation are enabled
+in this reproduction (Mosaic / MixUp from the original recipe are not
+implemented yet).
+
+| Metric | This repo (yolo11n, 640, 120 ep) | Original SPUR (CSPDarknet-tiny, 416, 300 ep) |
+|---|---|---|
+| mAP@0.5 | **90.38** | 96.10 |
+| mAP@[0.5:0.95] | **54.50** | 60.49 |
+| Precision @ conf=0.25 | **93.84** | — |
+| Recall @ conf=0.25 | **92.33** | — |
+
+Scale-wise AP@0.5 (this repo, COCO area buckets):
+
+| Bucket | GT count | AP@0.5 |
+|---|---|---|
+| small  (<32²) | 762 | 62.99 |
+| medium (32²–96²) | 910 | 42.79 |
+| large  (≥96²) | 374 | 16.71 |
+
+The ~6 pp gap to the original is explained by (a) 120 vs 300 epochs,
+(b) missing Mosaic/MixUp, and (c) the backbone swap from CSPDarknet-tiny
+to YOLO11n.
+
 ## Hyper-parameters (match the original SPUR `config.py`)
 
 | Constant | Value | Meaning |
