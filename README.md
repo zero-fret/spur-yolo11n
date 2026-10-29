@@ -123,6 +123,7 @@ this reproduction. See `CITATION.cff`.
 
 ## License
 
-MIT. The original SPUR paper and its YOLOv4-tiny code are the property of
+GPLv3.
+The original SPUR paper and its YOLOv4-tiny code are the property of
 their respective authors; this repository is an independent re-implementation
 and ships no original SPUR source code.
