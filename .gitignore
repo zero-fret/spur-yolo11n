@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Training artifacts (do not commit weights / logs)
+weights/
+runs/
+*.pt
+*.pth
+!weights/.gitkeep
+
+# Data (never commit)
+data/
+datasets/
+*.zip
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Smoke outputs
+*.jpg
+!assets/*.jpg
+!assets/*.png

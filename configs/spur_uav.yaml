@@ -1,0 +1,12 @@
+# Example SPUR dataset config.
+# Point `data_root` at a standard YOLO-layout dataset:
+#   <data_root>/images/train/*.jpg
+#   <data_root>/images/val/*.jpg
+#   <data_root>/labels/train/*.txt   # one line per object: cls cx cy w h (normalized)
+#   <data_root>/labels/val/*.txt
+data_root: data
+nc: 3
+names:
+  - zigzag
+  - straight
+  - wave

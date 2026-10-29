@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "SPUR-yolo11n: SPUR (ICML 2026) reimplemented on YOLO11n-det"
+message: "If you use this code, please cite the original SPUR paper and this reproduction."
+type: software
+authors:
+  - name: "SPUR-yolo11n contributors"
+version: 0.1.0
+license: MIT
+abstract: >
+  A from-scratch PyTorch re-implementation of SPUR (Scale-aware Proxy Uncertainty
+  Reweighting, ICML 2026) on top of a YOLO11n-det backbone. The original paper uses
+  YOLOv4-tiny; this repository replaces the backbone and anchor head with the
+  anchor-free YOLO11n while keeping all three SPUR stages (warmup / control /
+  full) and their hyper-parameters identical.
+references:
+  - type: conference-paper
+    title: "SPUR: (original ICML 2026 paper — replace with full citation on release)"
+    authors:
+      - name: "Original SPUR authors"
+    year: 2026
