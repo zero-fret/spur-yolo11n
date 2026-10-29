@@ -34,3 +34,5 @@ Thumbs.db
 *.jpg
 !assets/*.jpg
 !assets/*.png
+logs/
+_check_gpu.py

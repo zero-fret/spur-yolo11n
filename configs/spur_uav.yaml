@@ -1,12 +1,6 @@
-# Example SPUR dataset config.
-# Point `data_root` at a standard YOLO-layout dataset:
-#   <data_root>/images/train/*.jpg
-#   <data_root>/images/val/*.jpg
-#   <data_root>/labels/train/*.txt   # one line per object: cls cx cy w h (normalized)
-#   <data_root>/labels/val/*.txt
-data_root: data
-nc: 3
+# SPUR training on a UAV multiview dataset in standard YOLO format.
+# Point data_root to your local YOLO-format dataset (images/{split}/*.jpg + labels/{split}/*.txt).
+data_root: data/uav_yolo
+nc: 1
 names:
-  - zigzag
-  - straight
-  - wave
+  - uav

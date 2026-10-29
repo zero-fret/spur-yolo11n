@@ -53,10 +53,12 @@ spur-yolo11n/
 
 ## Install
 
-```powershell
-cd D:\0Fret\spur-yolo11n
+```bash
+git clone https://github.com/zero-fret/spur-yolo11n.git
+cd spur-yolo11n
 python -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\activate    # Windows
+# source .venv/bin/activate   # macOS/Linux
 pip install -r requirements.txt
 ```
 
@@ -123,7 +125,7 @@ this reproduction. See `CITATION.cff`.
 
 ## License
 
-GPLv3.
+GPLv3. 
 The original SPUR paper and its YOLOv4-tiny code are the property of
 their respective authors; this repository is an independent re-implementation
 and ships no original SPUR source code.
