@@ -19,6 +19,7 @@ from spur.dataset import create_dataloader
 from spur.engine import train_model
 from spur.spur_model import build_spur
 from spur.spur_loss import SPURLoss
+from spur.seed import set_seed, make_generator, remember_base_seed
 
 
 def load_config(path):
@@ -43,7 +44,17 @@ def parse_opt():
     p.add_argument('--no-amp', action='store_true')
     p.add_argument('--optimizer', default='sgd', choices=['sgd', 'adam'])
     p.add_argument('--max-batches', type=int, default=0)
+    p.add_argument('--seed', type=int, default=42,
+                   help='global random seed for reproducibility')
+    p.add_argument('--deterministic', action='store_true',
+                   help='force cuDNN deterministic kernels (slower)')
+    p.add_argument('--mosaic', type=float, default=0.5,
+                   help='Mosaic probability (0 disables)')
+    p.add_argument('--mixup', type=float, default=0.5,
+                   help='MixUp probability (0 disables)')
     p.add_argument('--tag', default='spur')
+    p.add_argument('--resume', default='',
+                   help='path to checkpoint to resume training from')
     p.add_argument('--weights-dir', default=os.path.join(
         os.path.dirname(os.path.abspath(__file__)), '..', 'weights'))
     return p.parse_args()
@@ -56,20 +67,25 @@ def main():
     nc = opt.nc or int(cfg.get('nc', 1))
 
     import torch
+    set_seed(opt.seed, deterministic=opt.deterministic)
+    remember_base_seed(opt.seed)
     device = torch.device(opt.device or ('cuda' if torch.cuda.is_available()
                                          else 'cpu'))
     print(f'=== SPUR train | device={device} | img={opt.img_size} '
-          f'batch={opt.batch} | data={data_root} nc={nc} ===')
+          f'batch={opt.batch} | data={data_root} nc={nc} | '
+          f'seed={opt.seed} mosaic={opt.mosaic} mixup={opt.mixup} ===')
 
     model = build_spur(nc=nc)
     print(f'parameters: {sum(p.numel() for p in model.parameters()):,}')
 
-    train_loader = create_dataloader(data_root, 'train', opt.img_size,
-                                     opt.batch, augment=True,
-                                     workers=opt.workers)
-    val_loader = create_dataloader(data_root, 'val', opt.img_size,
-                                   opt.batch, augment=False, shuffle=False,
-                                   workers=opt.workers)
+    gen = make_generator(opt.seed)
+    train_loader = create_dataloader(
+        data_root, 'train', opt.img_size, opt.batch, augment=True,
+        workers=opt.workers, mosaic_prob=opt.mosaic, mixup_prob=opt.mixup,
+        seed=opt.seed, generator=gen)
+    val_loader = create_dataloader(
+        data_root, 'val', opt.img_size, opt.batch, augment=False,
+        shuffle=False, workers=opt.workers)
     print(f'train samples: {len(train_loader.dataset)}  '
           f'val samples: {len(val_loader.dataset)}')
 
@@ -80,8 +96,12 @@ def main():
                        max_batches=opt.max_batches, val_loader=val_loader,
                        optimizer_type=opt.optimizer,
                        epoch_callback=criterion.set_epoch,
+                       resume=opt.resume,
                        extra_state=lambda: {'nc': nc,
-                                            'img_size': opt.img_size})
+                                            'img_size': opt.img_size,
+                                            'seed': opt.seed,
+                                            'mosaic': opt.mosaic,
+                                            'mixup': opt.mixup})
     print('last checkpoint:', last)
 
 
